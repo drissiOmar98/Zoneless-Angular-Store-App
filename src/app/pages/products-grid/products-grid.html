@@ -1,0 +1,35 @@
+<mat-sidenav-container>
+  <mat-sidenav mode="side" [opened]="true" class="h-full bg-white">
+    <div class="p-6">
+      <h2 class="text-lg  text-gray-900 ">Categories</h2>
+      <!-- Add category items here -->
+      <mat-nav-list>
+        @for (cat of categories(); track cat){
+          <mat-list-item [activated]="cat === category()" class="m-2" [routerLink]="['/products', cat]">
+            <span matListItemTitle class="font-medium" [class]="cat === category() ? '!text-white': null">
+              {{cat | titlecase}}
+            </span>
+          </mat-list-item>
+        }
+      </mat-nav-list>
+    </div>
+  </mat-sidenav>
+  <mat-sidenav-content class="bg-gray-100 p-6 h-full">
+    <h1 class="text-2xl font-bold text-gray-900 mb-1"> {{ category() | titlecase }}</h1>
+    <p class="text-base text-gray-600 mb-6">
+      {{ filteredProducts().length}} products found
+    </p>
+
+    <div class="responsive-grid">
+      @for (product of filteredProducts(); track product.id) {
+        <app-product-card [product]="product"/>
+      }
+    </div>
+
+  </mat-sidenav-content>
+
+</mat-sidenav-container>
+
+
+
+
