@@ -22,7 +22,7 @@ import {TitleCasePipe} from '@angular/common';
   templateUrl: './products-grid.html',
   styleUrl: './products-grid.scss',
 })
-export default class ProductsGrid {
+export class ProductsGrid {
 
   category = input<string>('all');
 
