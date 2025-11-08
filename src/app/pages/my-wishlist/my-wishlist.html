@@ -11,12 +11,25 @@
 
     <div class="responsive-grid">
       @for (product of favoriteStore.favoriteItems(); track product.id) {
-        <app-product-card [product]="product"/>
+        <app-product-card [product]="product">
+          <button
+            class="!absolute top-3 right-3 z-10 !bg-white border-0 shadow-md flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 hover:shadow-lg"
+            matIconButton
+            (click)="favoriteStore.removeFromFavorites(product.id)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </app-product-card>
       }
     </div>
 
-  } @else {
+    <div class="mt-8 flex justify-center">
+      <button matButton="outlined" class="danger" (click)="favoriteStore.clearFavorites()">
+        Clear Wishlist
+      </button>
+    </div>
 
+  } @else {
+    <app-empty-wishlist/>
   }
 
 </div>
