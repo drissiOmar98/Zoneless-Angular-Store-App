@@ -1,0 +1,7 @@
+<button
+  class=" !bg-white border-0 shadow-md flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 hover:shadow-lg"
+  matIconButton
+  [class]="favoriteStore.isFavorite()(product().id) ? '!text-red-500' : '!text-gray-400'"
+  (click)="toggleWishList(product())">
+  <mat-icon>{{ favoriteStore.isFavorite()(product().id) ? 'favorite' : 'favorite_border' }}</mat-icon>
+</button>
