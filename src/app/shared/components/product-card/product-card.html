@@ -1,7 +1,15 @@
-<div class="bg-white cursor-pointer rounded-xl shadow-lg overflow-hidden flex flex-col h-full"
+<div class="relative bg-white cursor-pointer rounded-xl shadow-lg overflow-hidden flex flex-col h-full"
      xmlns="http://www.w3.org/1999/html">
 
   <img [src]="product().imageUrl" class="w-full h-[300px] object-cover rounded-t-xl" alt=""/>
+
+  <button
+    class="!absolute z-10 top-3 right-3 w-10 h-10 rounded-full !bg-white border-0 shadow-md flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 hover:shadow-lg"
+    matIconButton
+    [class]="favoriteStore.isFavorite()(product().id) ? '!text-red-500' : '!text-gray-400'"
+    (click)="toggleWishList(product())">
+    <mat-icon>{{ favoriteStore.isFavorite()(product().id) ? 'favorite' : 'favorite_border' }}</mat-icon>
+  </button>
   <div class="p-5 flex flex-col flex-1">
     <h3 class="text-lg font-semibold text-gray-900 mb-2 leading-tight">
       {{ product().name }}
