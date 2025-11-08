@@ -1,1 +1,22 @@
-<p>my-wishlist works!</p>
+<div class="mx-auto max-w-[1220px] py-6 px-4">
+  <app-back-button class="mb-6" navigateTo="/products/all">
+    Continue Shopping
+  </app-back-button>
+
+  @if (favoriteStore.count() > 0) {
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-2xl font-bold"> My Wishlist</h1>
+      <span class="text-gray-500 text-xl"> {{ favoriteStore.count() }} items</span>
+    </div>
+
+    <div class="responsive-grid">
+      @for (product of favoriteStore.favoriteItems(); track product.id) {
+        <app-product-card [product]="product"/>
+      }
+    </div>
+
+  } @else {
+
+  }
+
+</div>
