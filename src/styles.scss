@@ -5,6 +5,8 @@
 // custom components at https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
 @use 'tailwindcss';
+/* Importing @ngxpert/hot-toast SCSS file. */
+@use '@ngxpert/hot-toast/styles';
 
 html {
   @include mat.theme(
@@ -182,3 +184,5 @@ mat-sidenav {
   grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
   gap: 1rem;
 }
+
+
