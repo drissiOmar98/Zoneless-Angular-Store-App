@@ -4,6 +4,7 @@ import {MatIcon} from '@angular/material/icon';
 import {RouterLink} from '@angular/router';
 import {FavoritesStore} from '../../core/store/favorites.store';
 import {MatBadge} from '@angular/material/badge';
+import {CartStore} from '../../core/store/cart.store';
 
 
 @Component({
@@ -21,5 +22,6 @@ import {MatBadge} from '@angular/material/badge';
 export class HeaderActions {
 
   favoriteStore = inject(FavoritesStore);
+  cartStore = inject(CartStore);
 
 }

@@ -2,7 +2,7 @@
   <button matIconButton routerLink="/wishlist" [matBadge]="favoriteStore.count()" [matBadgeHidden]="favoriteStore.count() === 0">
     <mat-icon>favorite</mat-icon>
   </button>
-  <button matIconButton>
+  <button matIconButton  [matBadge]="cartStore.uniqueItemsCount()" [matBadgeHidden]="cartStore.uniqueItemsCount() === 0">
     <mat-icon>shopping_cart</mat-icon>
   </button>
   <button matButton>
