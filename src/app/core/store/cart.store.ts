@@ -4,6 +4,7 @@ import {computed, inject} from '@angular/core';
 import {Product} from '../../shared/models/product';
 import {Toaster} from '../../shared/services/toaster';
 import {produce} from 'immer';
+import {FavoritesStore} from './favorites.store';
 
 
 export interface CartState {
@@ -25,7 +26,7 @@ export const CartStore = signalStore(
       return (productId: string) => store.items().some(item => item.id === productId);
     })
   })),
-  withMethods((store, toaster = inject(Toaster)) => ({
+  withMethods((store, toaster = inject(Toaster), favoriteStore = inject(FavoritesStore)) => ({
     addToCart: (product: Product, quantity = 1) => {
       const existingItemIndex = store.items().findIndex(item => item.id === product.id);
       const updatedCartItems = produce(store.items(), (draft) => {
@@ -48,6 +49,20 @@ export const CartStore = signalStore(
         draft[index].quantity = params.quantity
       });
       patchState(store, {items : updated});
+    },
+    addAllWishlistToCart: () => {
+      const updateCartItems = produce(store.items(),(draft) => {
+        favoriteStore.favoriteItems().forEach(p=> {
+          if(!draft.find(c => c.id === p.id)){
+            draft.push({ ...p, quantity: 1 });
+          }
+
+        })
+
+      })
+      patchState(store, {items: updateCartItems});
+      favoriteStore.clearFavorites();
+      toaster.success('All wishlist items added to cart');
     },
     resetCart() {
       patchState(store, {
