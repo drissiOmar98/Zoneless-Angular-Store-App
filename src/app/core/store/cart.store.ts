@@ -24,7 +24,7 @@ export const CartStore = signalStore(
     uniqueItemsCount: computed(() => store.items().length),
     isInCart: computed(() => {
       return (productId: string) => store.items().some(item => item.id === productId);
-    })
+    }),
   })),
   withMethods((store, toaster = inject(Toaster), favoriteStore = inject(FavoritesStore)) => ({
     addToCart: (product: Product, quantity = 1) => {
