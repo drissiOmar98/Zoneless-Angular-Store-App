@@ -3,19 +3,15 @@ import {patchState, signalStore, withComputed, withHooks, withMethods, withState
 import {computed, inject} from '@angular/core';
 import {Product} from '../../shared/models/product';
 import {Toaster} from '../../shared/services/toaster';
+import {produce} from 'immer';
 
 
 export interface CartState {
   items: CartItem[];
-  totalQuantities: number;
-  totalAmount: number;
 }
 
-
 const initialState: CartState = {
-  items: [],
-  totalQuantities: 0,
-  totalAmount: 0
+  items: []
 };
 
 export const CartStore = signalStore(
@@ -23,88 +19,39 @@ export const CartStore = signalStore(
   withState(initialState),
   withComputed((store) => ({
     isCartEmpty: computed(() => store.items().length === 0),
+    allItemsCount: computed(()=> store.items().reduce((acc , item) => acc + item.quantity,0)),
     uniqueItemsCount: computed(() => store.items().length),
     isInCart: computed(() => {
       return (productId: string) => store.items().some(item => item.id === productId);
     })
   })),
   withMethods((store, toaster = inject(Toaster)) => ({
-    addItem(product: Product) {
-      const items = store.items();
-      const existingItem = items.find(item => item.id === product.id);
-
-      let updatedItems: CartItem[];
-
-      if (existingItem) {
-        updatedItems = items.map(item =>
-          item.id === product.id
-            ? {...item, quantity: item.quantity + 1}
-            : item
-        );
-
-        patchState(store, {
-          items: updatedItems,
-          totalQuantities: store.totalQuantities() + 1,
-          totalAmount: store.totalAmount() + product.price
-        });
-
-        toaster.success(`Increased quantity for the Product`);
-      }
-      else {
-        updatedItems = [...items, {...product, quantity: 1}];
-
-        patchState(store, {
-          items: updatedItems,
-          totalQuantities: store.totalQuantities() + 1,
-          totalAmount: store.totalAmount() + product.price
-        });
-
-        toaster.success(`Product added to the Cart`);
-      }
-    },
-    removeItem(id: string) {
-      const items = store.items();
-      const existingItem = items.find(item => item.id === id);
-      if (!existingItem) return;
-
-      const updatedItems =
-        existingItem.quantity > 1
-          ? items.map(item =>
-            item.id === id
-              ? {...item, quantity: item.quantity - 1}
-              : item
-          )
-          : items.filter(item => item.id !== id);
-
-      patchState(store, {
-        items: updatedItems,
-        totalQuantities: store.totalQuantities() - 1,
-        totalAmount: store.totalAmount() - existingItem.price,
+    addToCart: (product: Product, quantity = 1) => {
+      const existingItemIndex = store.items().findIndex(item => item.id === product.id);
+      const updatedCartItems = produce(store.items(), (draft) => {
+        if (existingItemIndex !== -1) {
+          draft[existingItemIndex].quantity += quantity;
+          return;
+        }
+        draft.push({...product, quantity})
       });
-
+      patchState(store, {items: updatedCartItems});
       toaster.success(
-        existingItem.quantity > 1
-          ? `Decreased quantity for this Product`
-          : `Product removed from cart`
+        existingItemIndex !== -1
+          ? `Increased quantity for the product`
+          : `Product added to the cart`
       );
     },
-    remove(id: string) {
-      const existingItem = store.items().find(item => item.id === id);
-      if (!existingItem) return;
-
-      patchState(store, {
-        items: store.items().filter(item => item.id !== id),
-        totalQuantities: store.totalQuantities() - existingItem.quantity,
-        totalAmount: store.totalAmount() - (existingItem.quantity * existingItem.price)
+    setItemQuantity(params: { productId: string, quantity: number}) {
+      const index = store.items().findIndex(c => c.id === params.productId);
+      const updated = produce(store.items(), (draft) => {
+        draft[index].quantity = params.quantity
       });
-
-      toaster.success(`Product completely removed from cart`);
+      patchState(store, {items : updated});
     },
     resetCart() {
       patchState(store, {
-        items: [],
-        totalQuantities: 0,
-        totalAmount: 0
+        items: []
       });
       toaster.success('Cart cleared successfully');
     }
