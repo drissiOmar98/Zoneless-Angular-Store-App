@@ -64,6 +64,24 @@ export const CartStore = signalStore(
       favoriteStore.clearFavorites();
       toaster.success('All wishlist items added to cart');
     },
+    moveToWishlist: (product: Product) => {
+      // Remove the product from the cart
+      const updatedCartItems = store.items().filter(item => item.id !== product.id);
+      patchState(store, {items: updatedCartItems});
+
+      // Add the product to the wishlist using the store's method
+      const existsInWishlist = favoriteStore.favoriteItems().some(p => p.id === product.id);
+      if (!existsInWishlist) {
+        favoriteStore.addToFavorites(product);
+      }
+
+    },
+    removeFromCart: (product: Product) => {
+      patchState(store, {
+        items: store.items().filter((c) => c.id !== product.id)
+      });
+      toaster.success('Product removed from cart');
+    },
     resetCart() {
       patchState(store, {
         items: []
