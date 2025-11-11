@@ -1,0 +1,28 @@
+<div class="grid grid-cols-3 grid-cols-[3fr_1fr_1fr]">
+  <div class="flex items-center gap-4">
+    <img [src]="item().imageUrl" class="w-24 h-24 rounded-lg object-cover"/>
+    <div>
+      <div class="text-gray-900 text-lg font-semibold">{{ item().name }}</div>
+      <div class="text-gray-600 text-lg ">${{ item().price }}</div>
+    </div>
+  </div>
+
+  <app-qty-selector
+    [quantity]="item().quantity"
+    (qtyUpdated)="cartStore.setItemQuantity({productId: item().id , quantity: $event})"/>
+
+  <div class="flex flex-col items-end">
+    <div class="text-right font-semibold text-lg">
+      ${{ total() }}
+    </div>
+    <div class="flex -me-3">
+      <button matIconButton (click)="cartStore.moveToWishlist(item())">
+        <mat-icon>favorite_border</mat-icon>
+      </button>
+      <button matIconButton class="danger" (click)="cartStore.removeFromCart(item())">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+  </div>
+
+</div>
