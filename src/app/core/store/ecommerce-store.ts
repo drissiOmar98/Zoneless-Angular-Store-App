@@ -1,10 +1,15 @@
 import {Product} from '../../shared/models/product';
 import {patchState, signalMethod, signalStore, withComputed, withHooks, withMethods, withState} from '@ngrx/signals';
-import {computed} from '@angular/core';
+import {computed, inject} from '@angular/core';
+import {MatDialog} from '@angular/material/dialog';
+import {SignInDialog} from '../../shared/components/sign-in-dialog/sign-in-dialog';
+import {SignInParams, User} from '../../shared/models/user';
+import {Router} from '@angular/router';
 
 export type EcommerceState = {
   products: Product[];
   category: string;
+  user: User | undefined;
 }
 
 export const EcommerceStore = signalStore(
@@ -267,7 +272,8 @@ export const EcommerceStore = signalStore(
 
     ],
     category: 'all',
-  }),
+    user: undefined,
+  } as EcommerceState),
   withComputed(({category, products}) => ({
     filteredProducts: computed(() =>
       category() === 'all'
@@ -275,10 +281,37 @@ export const EcommerceStore = signalStore(
         : products().filter(p => p.category === category().toLowerCase())
     ),
   })),
-  withMethods((store) => ({
+  withMethods((store,matDialog = inject(MatDialog), router =inject(Router)) => ({
     setCategory: signalMethod<string>((category: string) => {
       patchState(store, {category});
-    })
+    }),
+    proceedToCheckout: () => {
+      matDialog.open(SignInDialog, {
+        disableClose: true,
+        data: {
+          checkout: true
+        }
+      })
+    },
+    signIn: ({email, password, checkout, dialogId}: SignInParams) => {
+      patchState(store, {
+        user: {
+          id: '1',
+          email,
+          name: 'John Doe',
+          imageUrl: 'https://randomuser.me/api/portraits/men/36.jpg'
+        }
+      });
+      matDialog.getDialogById(dialogId)?.close();
+      if(checkout){
+        router.navigate(['/checkout']);
+      }
+    },
+
+    signOut: () => {
+      patchState(store, { user: undefined});
+    }
+
   })),
   withHooks({
     onInit: (store) => {
