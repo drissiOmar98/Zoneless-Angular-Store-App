@@ -1,0 +1,46 @@
+<div class="p-8 min-w-[400px] flex flex-col">
+    <div class="flex justify-between">
+        <div>
+            <h2 class="text-xl font-medium mb-1">Sign Up</h2>
+            <p class="text-sm text-gray-500">Join us and start shopping today</p>
+        </div>
+        <button tabindex="-1" matIconButton class="-mt-2 -mr-2" mat-dialog-close>
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+
+  <form [formGroup]="signUpForm" class="mt-6 flex flex-col" (ngSubmit)="signUp()">
+    <mat-form-field class="mb-4">
+      <input matInput formControlName="name" type="text" placeholder="Enter your name"/>
+      <mat-icon matPrefix>person</mat-icon>
+    </mat-form-field>
+
+    <mat-form-field class="mb-4">
+      <input matInput formControlName="email" type="email" placeholder="Enter your email"/>
+      <mat-icon matPrefix>email</mat-icon>
+    </mat-form-field>
+
+    <mat-form-field class="mb-4">
+      <input matInput formControlName="password" type="password" placeholder="Enter your password"/>
+      <mat-icon matPrefix>lock</mat-icon>
+    </mat-form-field>
+
+
+    <mat-form-field class="mb-6">
+      <input matInput formControlName="confirmPassword" type="password" placeholder="Confirm your password"/>
+      <mat-icon matPrefix>lock</mat-icon>
+    </mat-form-field>
+
+    <button type="submit" matButton="filled" class="w-full" >
+      Create Account
+    </button>
+  </form>
+
+  <p class="text-sm text-gray-500 mt-2 text-center">
+    Don't have an account?
+    <a class="text-blue-600 cursor-pointer" (click)="openSignInDialog()">Sign In</a>
+  </p>
+
+
+
+</div>
