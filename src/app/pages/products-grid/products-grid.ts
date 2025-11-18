@@ -6,8 +6,7 @@ import {MatListItem, MatListItemTitle, MatNavList} from '@angular/material/list'
 import {RouterLink} from '@angular/router';
 import {TitleCasePipe} from '@angular/common';
 import {EcommerceStore} from '../../core/store/ecommerce-store';
-import {MatIcon} from '@angular/material/icon';
-import {MatIconButton} from '@angular/material/button';
+
 import {ToggleWishlistButton} from '../../shared/components/toggle-wishlist-button/toggle-wishlist-button';
 
 @Component({

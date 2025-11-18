@@ -3,13 +3,17 @@ import {patchState, signalMethod, signalStore, withComputed, withHooks, withMeth
 import {computed, inject} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {SignInDialog} from '../../shared/components/sign-in-dialog/sign-in-dialog';
-import {SignInParams, User} from '../../shared/models/user';
+import {SignInParams, SignUpParams, User} from '../../shared/models/user';
 import {Router} from '@angular/router';
+import {Toaster} from '../../shared/services/toaster';
+import {Order} from '../../shared/models/order';
+import {CartStore} from './cart.store';
 
 export type EcommerceState = {
   products: Product[];
   category: string;
   user: User | undefined;
+  loading: boolean;
 }
 
 export const EcommerceStore = signalStore(
@@ -273,6 +277,7 @@ export const EcommerceStore = signalStore(
     ],
     category: 'all',
     user: undefined,
+    loading: false,
   } as EcommerceState),
   withComputed(({category, products}) => ({
     filteredProducts: computed(() =>
@@ -281,17 +286,47 @@ export const EcommerceStore = signalStore(
         : products().filter(p => p.category === category().toLowerCase())
     ),
   })),
-  withMethods((store,matDialog = inject(MatDialog), router =inject(Router)) => ({
+  withMethods((store,matDialog = inject(MatDialog), router =inject(Router), toaster = inject(Toaster), cartStore = inject(CartStore)) => ({
     setCategory: signalMethod<string>((category: string) => {
       patchState(store, {category});
     }),
     proceedToCheckout: () => {
-      matDialog.open(SignInDialog, {
-        disableClose: true,
-        data: {
-          checkout: true
-        }
-      })
+      if (!store.user()) {
+        matDialog.open(SignInDialog, {
+          disableClose: true,
+          data: {
+            checkout: true
+          }
+        });
+        return;
+      }
+      router.navigate(['/checkout']);
+    },
+    placeOrder: async () => {
+      patchState(store, {loading: true});
+      const user = store.user();
+      if(!user){
+        toaster.error('Please login before placing order');
+        patchState(store, {loading: false});
+        return;
+      }
+
+      const order: Order = {
+        id: crypto.randomUUID(),
+        userId: user.id,
+        total: Math.round(cartStore
+          .items()
+          .reduce((acc, item) => acc + item.quantity * item.price, 0)),
+        items: cartStore.items(),
+        paymentStatus: 'success',
+      };
+
+      await new Promise((resolve) => setTimeout(resolve,1000));
+      patchState(store, {loading: false});
+      cartStore.resetCart();
+      router.navigate(['order-success'])
+
+
     },
     signIn: ({email, password, checkout, dialogId}: SignInParams) => {
       patchState(store, {
@@ -307,10 +342,23 @@ export const EcommerceStore = signalStore(
         router.navigate(['/checkout']);
       }
     },
-
     signOut: () => {
       patchState(store, { user: undefined});
-    }
+    },
+    signUp: ({email, password, name, checkout, dialogId}: SignUpParams) => {
+      patchState(store, {
+        user: {
+          id: '1',
+          email,
+          name: 'John Doe',
+          imageUrl: 'https://randomuser.me/api/portraits/men/36.jpg'
+        }
+      });
+      matDialog.getDialogById(dialogId)?.close();
+      if (checkout) {
+        router.navigate(['/checkout']);
+      }
+    },
 
   })),
   withHooks({
