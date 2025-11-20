@@ -15,6 +15,7 @@ export type EcommerceState = {
   category: string;
   user: User | undefined;
   loading: boolean;
+  selectedProductId: string | undefined;
 }
 
 export const EcommerceStore = signalStore(
@@ -279,18 +280,24 @@ export const EcommerceStore = signalStore(
     category: 'all',
     user: undefined,
     loading: false,
+    selectedProductId: undefined,
   } as EcommerceState),
   withStorageSync({ key: ' Modern Store' , select: ({user}) => ({user})}),
-  withComputed(({category, products}) => ({
+  withComputed(({category, products,selectedProductId}) => ({
     filteredProducts: computed(() =>
       category() === 'all'
         ? products()
         : products().filter(p => p.category === category().toLowerCase())
     ),
+    selectedProduct: computed(()=> products().find((p)=> p.id === selectedProductId())),
+
   })),
   withMethods((store,matDialog = inject(MatDialog), router =inject(Router), toaster = inject(Toaster), cartStore = inject(CartStore)) => ({
     setCategory: signalMethod<string>((category: string) => {
       patchState(store, {category});
+    }),
+    setProductId: signalMethod<string>((productId: string) => {
+      patchState(store, {selectedProductId: productId});
     }),
     proceedToCheckout: () => {
       if (!store.user()) {
