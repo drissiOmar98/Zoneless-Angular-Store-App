@@ -2,6 +2,7 @@ import {Product} from '../../shared/models/product';
 import {patchState, signalStore, withComputed, withHooks, withMethods, withState} from '@ngrx/signals';
 import {Toaster} from '../../shared/services/toaster';
 import {computed, inject} from '@angular/core';
+import {withStorageSync} from '@angular-architects/ngrx-toolkit';
 
 export interface FavoritesState {
   favoriteItems: Product[];
@@ -15,6 +16,7 @@ const initialFavoritesState: FavoritesState = {
 export const FavoritesStore = signalStore(
   {providedIn: 'root'},
   withState(initialFavoritesState),
+  withStorageSync({ key: 'Favorites Store' }),
   withComputed((store) => ({
     count: computed(() => store.favoriteItems().length),
     isFavorite: computed(() => {

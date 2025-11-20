@@ -5,6 +5,7 @@ import {Product} from '../../shared/models/product';
 import {Toaster} from '../../shared/services/toaster';
 import {produce} from 'immer';
 import {FavoritesStore} from './favorites.store';
+import {withStorageSync} from '@angular-architects/ngrx-toolkit';
 
 
 export interface CartState {
@@ -18,6 +19,7 @@ const initialState: CartState = {
 export const CartStore = signalStore(
   {providedIn: 'root'},
   withState(initialState),
+  withStorageSync({ key: 'Cart Store' }),
   withComputed((store) => ({
     isCartEmpty: computed(() => store.items().length === 0),
     allItemsCount: computed(()=> store.items().reduce((acc , item) => acc + item.quantity,0)),

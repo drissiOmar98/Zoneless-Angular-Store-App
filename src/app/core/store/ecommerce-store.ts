@@ -8,6 +8,7 @@ import {Router} from '@angular/router';
 import {Toaster} from '../../shared/services/toaster';
 import {Order} from '../../shared/models/order';
 import {CartStore} from './cart.store';
+import {withStorageSync} from '@angular-architects/ngrx-toolkit';
 
 export type EcommerceState = {
   products: Product[];
@@ -279,6 +280,7 @@ export const EcommerceStore = signalStore(
     user: undefined,
     loading: false,
   } as EcommerceState),
+  withStorageSync({ key: ' Modern Store' , select: ({user}) => ({user})}),
   withComputed(({category, products}) => ({
     filteredProducts: computed(() =>
       category() === 'all'
