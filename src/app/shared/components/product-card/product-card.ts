@@ -3,6 +3,7 @@ import {Product} from '../../models/product';
 import {MatIcon} from '@angular/material/icon';
 import {MatButton} from '@angular/material/button';
 import {CartStore} from '../../../core/store/cart.store';
+import {RouterLink} from '@angular/router';
 
 
 @Component({
@@ -10,6 +11,7 @@ import {CartStore} from '../../../core/store/cart.store';
   imports: [
     MatIcon,
     MatButton,
+    RouterLink,
 
   ],
   templateUrl: './product-card.html',
