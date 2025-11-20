@@ -1,0 +1,34 @@
+<div class="mx-auto max-w-[1200px] py-6">
+  <app-back-button class="mb-4" navigateTo="/cart">Back to Cart</app-back-button>
+  <h1 class="text-3xl font-extrabold mb-4">Checkout</h1>
+
+  <div class="grid grid-cols-l lg:grid-cols-5 gap-6">
+    <div class="lg:col-span-3 flex flex-col gap-6">
+      <app-shipping-form/>
+      <app-payment-form/>
+    </div>
+    <div class="lg:col-span-2">
+      <app-summarize-order>
+        <ng-container checkoutItems>
+          @for (item of cartStore.items(); track item.id) {
+            <div class="text-sm flex justify-between">
+              <span>{{ item.name }} x {{ item.quantity }}</span>
+              <span>${{ (item.price * item.quantity).toFixed(0) }}</span>
+            </div>
+
+          }
+        </ng-container>
+        <ng-container actionButtons>
+          <button
+            matButton="filled"
+            class="w-full mt-6 py-3"
+            [disabled]="store.loading()"
+            (click)="store.placeOrder()"
+          >
+            {{ store.loading() ? 'Processing...' : 'Place Order' }}
+          </button>
+        </ng-container>
+      </app-summarize-order>
+    </div>
+  </div>
+</div>
