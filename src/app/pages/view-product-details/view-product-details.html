@@ -7,6 +7,7 @@
         [src]="product.imageUrl"
         [alt]="product.name"
         class="w-[500px] h-[550px] object-cover rounded-lg"
+        [style.view-transition-name]="'product-image-' + product.id"
 
       />
       <div class="flex-1">
