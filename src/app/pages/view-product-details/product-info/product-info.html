@@ -3,6 +3,9 @@
 </div>
 
 <h1 class="text-2xl font-extrabold mb-3">{{ product().name }}</h1>
+<app-star-rating [rating]="product().rating" class="mb-3 block">
+  {{ product().rating }} ({{ product().reviewCount }} reviews)
+</app-star-rating>
 <p class="text-3xl font-extrabold mb-4">${{ product().price }}</p>
 
 <app-stock-status class="mb-4" [inStock]="product().inStock"/>

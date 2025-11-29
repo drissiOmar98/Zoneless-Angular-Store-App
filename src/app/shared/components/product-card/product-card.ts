@@ -4,6 +4,7 @@ import {MatIcon} from '@angular/material/icon';
 import {MatButton} from '@angular/material/button';
 import {CartStore} from '../../../core/store/cart.store';
 import {RouterLink} from '@angular/router';
+import {StarRating} from '../star-rating/star-rating';
 
 
 @Component({
@@ -12,6 +13,7 @@ import {RouterLink} from '@angular/router';
     MatIcon,
     MatButton,
     RouterLink,
+    StarRating,
 
   ],
   templateUrl: './product-card.html',

@@ -7,6 +7,7 @@ import {QtySelector} from '../../../shared/components/qty-selector/qty-selector'
 import {TitleCasePipe} from '@angular/common';
 import {CartStore} from '../../../core/store/cart.store';
 import {StockStatus} from '../stock-status/stock-status';
+import {StarRating} from '../../../shared/components/star-rating/star-rating';
 
 @Component({
   selector: 'app-product-info',
@@ -17,7 +18,8 @@ import {StockStatus} from '../stock-status/stock-status';
     QtySelector,
     MatButton,
     TitleCasePipe,
-    StockStatus
+    StockStatus,
+    StarRating
   ],
   templateUrl: './product-info.html',
   styleUrl: './product-info.scss',
