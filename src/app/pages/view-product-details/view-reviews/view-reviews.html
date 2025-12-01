@@ -1,7 +1,14 @@
 <div appViewPanel>
   <div class="flex justify-between items-center mb-4">
     <h2 class="text-xl font-semibold">Customer Reviews</h2>
+    @if (store.user()) {
+       <button matButton="filled" (click)="store.showWriteReview()">Write a Review</button>
+    }
   </div>
+
+  @if (store.writeReview()) {
+    <app-write-review class="mb-6"/>
+  }
   <app-rating-summary [product]="product()"/>
   <div class="flex flex-col gap-6">
     @for (review of sortedReviews(); track review.id) {
