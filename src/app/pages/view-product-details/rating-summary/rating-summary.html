@@ -1,0 +1,38 @@
+<div class="flex items-center gap-8 mb-6 p-4 bg-gray-50 rounded-lg">
+
+  <!-- Overall Rating Section -->
+  <div class="flex flex-col items-center w-1/2">
+    <div class="text-4xl font-bold text-gray-900 mb-1">
+      {{ product().rating }}
+    </div>
+
+    <div class="flex items-center mb-2">
+      <app-star-rating [rating]="product().rating"></app-star-rating>
+    </div>
+
+    <div class="text-sm text-gray-500">
+      Based on {{ totalReviews() }} reviews
+    </div>
+  </div>
+
+  <!-- Rating Breakdown -->
+  <div class="flex flex-col w-1/2">
+
+    @for (breakdown of ratingBreakdown(); track breakdown.stars) {
+      <div class="flex items-center gap-2 mb-2">
+
+        <span class="text-sm w-4">{{ breakdown.stars }}★</span>
+
+        <div class="w-full bg-gray-200 rounded-full h-2 mx-2">
+          <div
+            class="bg-yellow-400 h-2 rounded-full transition-all duration-300"
+            [style.width.%]="breakdown.percentage">
+          </div>
+        </div>
+
+        <span class="text-sm text-gray-600 w-8 text-right">{{ breakdown.count }}</span>
+      </div>
+    }
+
+  </div>
+</div>
