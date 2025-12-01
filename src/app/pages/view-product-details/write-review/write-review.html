@@ -1,0 +1,45 @@
+<div appViewPanel>
+  <h2 class="text-xl font-semibold mb-6">Write a Review</h2>
+  <form [formGroup]="reviewForm" (ngSubmit)="saveReview()">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+      <mat-form-field>
+        <mat-label>Review Title</mat-label>
+        <input formControlName="title"
+               placeholder="Summarize your review"
+               matInput
+               type="text"
+        />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select formControlName="rating">
+          @for (option of ratingOptions(); track option.value) {
+            <mat-option [value]="option.value"> {{ option.label }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="col-span-2">
+        <mat-label>Review</mat-label>
+        <textarea
+          placeholder="Tell others your experience with this product"
+          formControlName="comment"
+          matInput
+          type="text"
+          rows="4"
+        >
+        </textarea>
+      </mat-form-field>
+
+    </div>
+    <div class="flex gap-4">
+      <button matButton="filled" type="submit" [disabled]="store.loading()">
+        {{ store.loading() ? 'Submitting...' : 'Submit Review' }}
+      </button>
+      <button matButton="outlined" type="button" (click)="store.hideWriteReview()">
+        Cancel
+      </button>
+    </div>
+
+  </form>
+
+
+</div>
