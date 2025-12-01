@@ -9,6 +9,8 @@ import {Toaster} from '../../shared/services/toaster';
 import {Order} from '../../shared/models/order';
 import {CartStore} from './cart.store';
 import {withStorageSync} from '@angular-architects/ngrx-toolkit';
+import {AddReviewParams, UserReview} from '../../shared/models/user-review';
+import {produce} from 'immer';
 
 export type EcommerceState = {
   products: Product[];
@@ -16,6 +18,7 @@ export type EcommerceState = {
   user: User | undefined;
   loading: boolean;
   selectedProductId: string | undefined;
+  writeReview: boolean
 }
 
 export const EcommerceStore = signalStore(
@@ -1384,6 +1387,7 @@ export const EcommerceStore = signalStore(
     user: undefined,
     loading: false,
     selectedProductId: undefined,
+    writeReview: false,
   } as EcommerceState),
   withStorageSync({ key: ' Modern Store' , select: ({user}) => ({user})}),
   withComputed(({category, products,selectedProductId}) => ({
@@ -1471,6 +1475,15 @@ export const EcommerceStore = signalStore(
         router.navigate(['/checkout']);
       }
     },
+    showWriteReview: () => {
+      patchState(store, {writeReview: true});
+    },
+    hideWriteReview: () => {
+      patchState(store, {writeReview: false});
+    },
+
+
+
 
   })),
   withHooks({
