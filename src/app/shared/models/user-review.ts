@@ -8,3 +8,6 @@ export type UserReview = {
   comment: string;
   reviewDate: Date;
 };
+
+
+export type AddReviewParams = Pick<UserReview, 'title' | 'comment' | 'rating' >;
