@@ -11,6 +11,7 @@ import {CartStore} from './cart.store';
 import {withStorageSync} from '@angular-architects/ngrx-toolkit';
 import {AddReviewParams, UserReview} from '../../shared/models/user-review';
 import {produce} from 'immer';
+import {SeoManager} from '../../shared/services/seo-manager';
 
 export type EcommerceState = {
   products: Product[];
@@ -1389,7 +1390,7 @@ export const EcommerceStore = signalStore(
     selectedProductId: undefined,
     writeReview: false,
   } as EcommerceState),
-  withStorageSync({ key: ' Modern Store' , select: ({user}) => ({user})}),
+  //withStorageSync({ key: ' Modern Store' , select: ({user}) => ({user})}),
   withComputed(({category, products,selectedProductId}) => ({
     filteredProducts: computed(() =>
       category() === 'all'
@@ -1399,12 +1400,20 @@ export const EcommerceStore = signalStore(
     selectedProduct: computed(()=> products().find((p)=> p.id === selectedProductId())),
 
   })),
-  withMethods((store,matDialog = inject(MatDialog), router =inject(Router), toaster = inject(Toaster), cartStore = inject(CartStore)) => ({
+  withMethods((store,matDialog = inject(MatDialog), router =inject(Router), toaster = inject(Toaster), cartStore = inject(CartStore), seoManager =inject(SeoManager)) => ({
     setCategory: signalMethod<string>((category: string) => {
       patchState(store, {category});
     }),
     setProductId: signalMethod<string>((productId: string) => {
       patchState(store, {selectedProductId: productId});
+    }),
+    setProductsListSeoTags: signalMethod<string | undefined>((category) => {
+      const categoryName = category ? category.charAt(0).toUpperCase() + category.slice(1) : 'All Products';
+      const description= category ? `Browse our collection of ${category} products` : `Browse our collection of products`;
+      seoManager.updateSeoTags({
+        title: categoryName,
+        description
+      });
     }),
     proceedToCheckout: () => {
       if (!store.user()) {
