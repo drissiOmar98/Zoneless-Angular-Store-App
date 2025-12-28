@@ -47,6 +47,7 @@ export class ProductsGrid {
 
   constructor() {
     this.store.setCategory(this.category);
+    this.store.setProductsListSeoTags(this.category)
   }
 
 
