@@ -1407,6 +1407,15 @@ export const EcommerceStore = signalStore(
     setProductId: signalMethod<string>((productId: string) => {
       patchState(store, {selectedProductId: productId});
     }),
+    setProductSeoTags: signalMethod<Product | undefined>((product) => {
+      if (!product) return;
+      seoManager.updateSeoTags({
+        title: product.name,
+        description: product.description,
+        image: product.imageUrl,
+        type: 'product',
+      });
+    }),
     setProductsListSeoTags: signalMethod<string | undefined>((category) => {
       const categoryName = category ? category.charAt(0).toUpperCase() + category.slice(1) : 'All Products';
       const description= category ? `Browse our collection of ${category} products` : `Browse our collection of products`;
