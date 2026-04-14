@@ -18,8 +18,11 @@ export type EcommerceState = {
   category: string;
   user: User | undefined;
   loading: boolean;
+  selectedCategory: string;
   selectedProductId: string | undefined;
-  writeReview: boolean
+  writeReview: boolean;
+  showSidenav: boolean;
+  searchQuery: string;
 }
 
 export const EcommerceStore = signalStore(
@@ -1384,26 +1387,48 @@ export const EcommerceStore = signalStore(
 
 
     ],
-    category: 'all',
+    selectedCategory: 'all',
     user: undefined,
     loading: false,
     selectedProductId: undefined,
     writeReview: false,
+    showSidenav: true,
+    searchQuery: ''
   } as EcommerceState),
-  //withStorageSync({ key: ' Modern Store' , select: ({user}) => ({user})}),
-  withComputed(({category, products,selectedProductId}) => ({
-    filteredProducts: computed(() =>
-      category() === 'all'
-        ? products()
-        : products().filter(p => p.category === category().toLowerCase())
-    ),
-    selectedProduct: computed(()=> products().find((p)=> p.id === selectedProductId())),
+ //withStorageSync({ key: ' Modern Store' , select: ({user}) => ({user})}),
+   withComputed(({ products, selectedCategory, selectedProductId, searchQuery }) => {
+        const productsByCategory = computed(() => {
+            const category = selectedCategory();
+            if (category === 'all') return products();
+            return products().filter(product => product.category === category.toLowerCase());
+        });
+        const filteredProducts = computed(() => {
+            const query = searchQuery().toLowerCase();
+            const byCategory = productsByCategory();
+            if (!query) return byCategory;
+            return byCategory.filter(product => product.name.toLowerCase().includes(query));
 
-  })),
-  withMethods((store,matDialog = inject(MatDialog), router =inject(Router), toaster = inject(Toaster), cartStore = inject(CartStore), seoManager =inject(SeoManager)) => ({
-    setCategory: signalMethod<string>((category: string) => {
-      patchState(store, {category});
+        });
+
+        const selectedProduct = computed(() => products().find(product => product.id === selectedProductId()));
+
+        return {
+            filteredProducts,
+            productsByCategory,
+            selectedProduct
+        }
     }),
+
+  withMethods((store, matDialog = inject(MatDialog), router = inject(Router), toaster = inject(Toaster), cartStore = inject(CartStore), seoManager = inject(SeoManager)) => ({
+    toggleSidenav: () => {
+      patchState(store, {showSidenav: !store.showSidenav()})
+    },
+    setCategory(category: string) {
+      patchState(store, {selectedCategory: category});
+    },
+    setSearchQuery(query: string) {
+      patchState(store, {searchQuery: query});
+    },
     setProductId: signalMethod<string>((productId: string) => {
       patchState(store, {selectedProductId: productId});
     }),
