@@ -1,4 +1,13 @@
+<!--
 <button matButton="text" [routerLink]="navigateTo() ?? null" class="-ms-2 flex items-center gap-1 ">
   <mat-icon>arrow_back</mat-icon>
   <ng-content />
+</button>
+-->
+
+<button mat-button (click)="goBack()" class="-ms-2 flex items-center gap-1 ">
+    <mat-icon>
+        arrow_back
+    </mat-icon>
+    <ng-content />
 </button>
