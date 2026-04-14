@@ -1,5 +1,5 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection } from '@angular/core';
-import {provideRouter, withComponentInputBinding, withViewTransitions} from '@angular/router';
+import {provideRouter, withComponentInputBinding, withInMemoryScrolling, withViewTransitions} from '@angular/router';
 
 import { routes } from './app.routes';
 import { provideHotToastConfig } from '@ngxpert/hot-toast';

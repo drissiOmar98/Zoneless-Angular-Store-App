@@ -1,6 +1,29 @@
+<!--
 <mat-toolbar class="w-full elevated py-2">
   <div class="max-w-[1200px] mx-auto w-full flex items-center justify-between">
     <span>Modern Store</span>
     <app-header-actions/>
   </div>
+</mat-toolbar>
+
+-->
+
+
+<mat-toolbar class="w-full elevated py-2">
+    <div class="max-w-[1200px] mx-auto w-full flex items-center justify-between">
+        <div class="flex items-center gap-2">
+            <button mat-icon-button (click)="toggleSidenav()"
+                class="!bg-transparent hover:!bg-gray-200 transition-colors duration-200 px-1 rounded leading-none">
+                <mat-icon>menu</mat-icon>
+            </button>
+            <span [routerLink]="['/products', 'all']" (click)="store.setCategory('all')"
+                class="text-2xl cursor-pointer">
+                Modern Store
+            </span>
+        </div>
+
+        <app-search-bar class="flex-1 px-4 max-w-2xl" />
+
+        <app-header-actions />
+    </div>
 </mat-toolbar>
