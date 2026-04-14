@@ -25,6 +25,6 @@ export class ViewProductDetails {
     this.store.setProductSeoTags(this.store.selectedProduct);
   }
 
-  backRoute = computed(() => `/products/${this.store.category()}`);
+  backRoute = computed(() => `/products/${this.store.selectedCategory()}`);
 
 }
