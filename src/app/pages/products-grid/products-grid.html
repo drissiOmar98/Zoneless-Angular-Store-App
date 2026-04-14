@@ -1,12 +1,13 @@
+<!--
 <mat-sidenav-container>
   <mat-sidenav mode="side" [opened]="true" class="h-full bg-white">
     <div class="p-6">
       <h2 class="text-lg  text-gray-900 ">Categories</h2>
-      <!-- Add category items here -->
+      &lt;!&ndash; Add category items here &ndash;&gt;
       <mat-nav-list>
         @for (cat of categories(); track cat){
-          <mat-list-item [activated]="cat === category()" class="m-2" [routerLink]="['/products', cat]">
-            <span matListItemTitle class="font-medium" [class]="cat === category() ? '!text-white': null">
+          <mat-list-item (click)="store.setCategory(cat)" [activated]="cat === store.selectedCategory()" class="m-2" [routerLink]="['/products', cat]">
+            <span matListItemTitle class="font-medium" [class]="cat === store.selectedCategory() ? '!text-white': null">
               {{cat | titlecase}}
             </span>
           </mat-list-item>
@@ -15,11 +16,10 @@
     </div>
   </mat-sidenav>
   <mat-sidenav-content class="bg-gray-100 p-6 h-full">
-    <h1 class="text-2xl font-bold text-gray-900 mb-1"> {{ category() | titlecase }}</h1>
-    <p class="text-base text-gray-600 mb-6">
-      {{ store.filteredProducts().length}} products found
-    </p>
-
+    <h1 class="text-2xl font-bold text-gray-900 mb-1"> {{ store.selectedCategory() | titlecase }}</h1>
+      <p class="text-base text-gray-600 mb-6"> {{ store.searchQuery() ? `${store.filteredProducts().length} results
+            for
+            ${store.searchQuery()}` : `${store.filteredProducts().length} products found` }}</p>
     <div class="responsive-grid">
       @for (product of store.filteredProducts(); track product.id) {
         <app-product-card [product]="product">
@@ -33,6 +33,46 @@
 
   </mat-sidenav-content>
 
+</mat-sidenav-container>
+-->
+
+
+<mat-sidenav-container class="h-full">
+    <mat-sidenav mode="side" [opened]="store.showSidenav()">
+        <div class="p-6">
+            <h2 class="text-lg text-gray-900">Categories</h2>
+            <mat-nav-list>
+                @for(cat of categories(); track cat) {
+                <mat-list-item class="my-2" (click)="store.setCategory(cat)" queryParamsHandling="preserve"
+                    [activated]="cat === store.selectedCategory()" [routerLink]="['/products', cat]">
+                    <span matListItemTitle class="font-medium"
+                        [class]="cat === store.selectedCategory() ? '!text-white' : 'null'">
+                        {{ cat | titlecase }}
+                    </span>
+                </mat-list-item>
+
+                }
+            </mat-nav-list>
+
+        </div>
+    </mat-sidenav>
+    <mat-sidenav-content class="bg-gray-100 p-6 h-full">
+        <h1 class="text-2xl font-bold text-gray-900 mb-1">{{store.selectedCategory() | titlecase}}</h1>
+        <p class="text-base text-gray-600 mb-6"> {{ store.searchQuery() ? `${store.filteredProducts().length} results
+            for
+            ${store.searchQuery()}` : `${store.filteredProducts().length} products found` }}</p>
+
+
+        <div class="responsive-grid">
+            @for (product of store.filteredProducts(); track product.id) {
+            <app-product-card [product]="product">
+                <app-toggle-wishlist-button
+                    class="!absolute top-3 right-3 z-10 w-10 h-10 rounded-xl !bg-gray-200 border-0 shadow-md flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 hover:shadow-lg"
+                    [product]="product" [style.view-transition-name]="'wishlist-button-' + product.id" />
+            </app-product-card>
+            }
+        </div>
+    </mat-sidenav-content>
 </mat-sidenav-container>
 
 
